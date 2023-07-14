@@ -6,6 +6,9 @@ package it.polito.tdp.itunes;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Set;
+
+import it.polito.tdp.itunes.model.Album;
 import it.polito.tdp.itunes.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,7 +37,7 @@ public class FXMLController {
     private Button btnSet; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbA1"
-    private ComboBox<?> cmbA1; // Value injected by FXMLLoader
+    private ComboBox<Album> cmbA1; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtDurata"
     private TextField txtDurata; // Value injected by FXMLLoader
@@ -47,12 +50,25 @@ public class FXMLController {
 
     @FXML
     void doComponente(ActionEvent event) {
-    	
+    	txtResult.setText("Componente connessa di "+ this.cmbA1.getValue().getTitle());
+    	Set<Album> componente = this.model.getComponente(cmbA1.getValue());
+    	int nTracksTot = 0;
+    	for (Album a: componente) {
+    		nTracksTot+= a.getTracks();
+    	}
+    	txtResult.appendText("\ndimensione componente connessa: "+componente.size());
+    	txtResult.appendText("\n#traks :"+nTracksTot);
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-    	
+    	String d = txtDurata.getText();
+    	this.model.BuidGraph(d);
+    	if (this.model.getVertici().size()!=0) {
+    		txtResult.setText(model.getNArchi()+"-"+model.getVertici().size());
+    	}
+    	this.cmbA1.getItems().clear();
+    	this.cmbA1.getItems().addAll(this.model.getVertici());
     }
 
     @FXML
